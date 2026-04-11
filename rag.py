@@ -5,17 +5,23 @@ from langchain_core.output_parsers import StrOutputParser
 from dotenv import load_dotenv
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_community.vectorstores import FAISS
-from langchain_community.document_loaders import PyMuPDFLoader
+from langchain_community.document_loaders import PyMuPDFLoader, Docx2txtLoader
 from langchain_core.runnables import RunnablePassthrough, RunnableLambda
+import os
 
 load_dotenv()
 
 def create_rag_chain(file_path):
     model = ChatGroq(model="llama-3.1-8b-instant", temperature=0.7)
 
-    loader = PyMuPDFLoader(file_path)
+    ext = os.path.splitext(file_path)[1].lower()
+    if ext == ".pdf":
+        loader = PyMuPDFLoader(file_path)
+    elif ext == ".docx":
+        loader = Docx2txtLoader(file_path)
+    else:        
+        raise ValueError("Unsupported file type. Only PDF and DOCX are supported.")
     document = loader.load()
-
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=250)
     texts = text_splitter.split_documents(documents=document)
 
