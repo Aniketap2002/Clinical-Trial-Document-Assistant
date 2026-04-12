@@ -32,20 +32,20 @@ def create_rag_chain(file_path):
 
     prompt = ChatPromptTemplate.from_messages([
         ("system", """You are a clinical trial document assistant.
-Use the context below to answer the question accurately.
+    Use the context below to answer the question accurately.
 
-Rules:
-1. Only answer from the provided context
-2. If not in context say 'Not found in document'
-3. Always end your answer with [Source: page X]
-4. Never make up information
-5. Be precise
+    Rules:
+    1. Only answer from the provided context
+    2. If not in context say 'Not found in document'
+    3. Always end your answer with [Source: page X]
+    4. Never make up information
+    5. Be precise
 
-Previous conversation:
-{chat_history}
+    Previous conversation:
+    {chat_history}
 
-Context: {context}"""),
-        ("human", "{question}")
+    Context: {context}"""),
+    ("human", "{question}")
     ])
 
     parser = StrOutputParser()
